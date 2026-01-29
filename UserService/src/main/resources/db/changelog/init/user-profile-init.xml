@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <changeSet id="1769622270846-1" author="srs">
+
+        <createTable tableName="user_profiles">
+            <column name="keycloak_id" type="VARCHAR(255)">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_user_profiles"/>
+            </column>
+            <column name="username" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false" uniqueConstraintName="uk_user_profiles_username"/>
+            </column>
+            <column name="email" type="VARCHAR(255)">
+                <constraints unique="true" nullable="false" uniqueConstraintName="uk_user_profiles_email"/>
+            </column>
+            <column name="roles" type="TEXT[]">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+
+        <createIndex tableName="user_profiles" indexName="idx_user_profiles_username">
+            <column name="username"/>
+        </createIndex>
+
+        <createIndex tableName="user_profiles" indexName="idx_user_profiles_email">
+            <column name="email"/>
+        </createIndex>
+    </changeSet>
+
+</databaseChangeLog>
