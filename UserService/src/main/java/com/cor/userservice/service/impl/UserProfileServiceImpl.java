@@ -1,17 +1,18 @@
 package com.cor.userservice.service.impl;
 
+import com.cor.userservice.dto.UserProfileCreateDto;
 import com.cor.userservice.dto.UserProfileDto;
 import com.cor.userservice.entities.UserProfile;
-import com.cor.userservice.util.exception.ResourceNotFoundException;
 import com.cor.userservice.mapper.UserProfileMapper;
 import com.cor.userservice.repository.UserProfileRepository;
 import com.cor.userservice.service.UserProfileService;
+import com.cor.userservice.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 /**
  * Реализация сервиса для работы с профилями пользователей.
@@ -35,30 +36,31 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<UserProfileDto> getAllUserProfiles() {
-        log.debug("Получение списка всех профилей пользователей");
-        return userProfileRepository.findAll().stream()
-                .map(userProfileMapper::toDto)
-                .toList();
+    public Page<UserProfileDto> getAllUserProfiles(Pageable pageable) {
+        log.debug("Получение профилей пользователей с пагинацией: page={}, size={}",
+                pageable.getPageNumber(), pageable.getPageSize());
+
+        return userProfileRepository.findAll(pageable)
+                .map(userProfileMapper::toDto);
     }
 
     @Override
     @Transactional
-    public UserProfileDto createUserProfile(UserProfileDto userProfileDto) {
-        log.debug("Создание нового профиля пользователя: {}", userProfileDto.getEmail());
-        
-        if (userProfileRepository.existsByEmail(userProfileDto.getEmail())) {
-            throw new IllegalArgumentException("Пользователь с email " + userProfileDto.getEmail() + " уже существует");
+    public UserProfileDto createUserProfile(UserProfileCreateDto userProfileCreateDto) {
+        log.debug("Создание нового профиля пользователя: {}", userProfileCreateDto.getEmail());
+
+        if (userProfileRepository.existsByEmail(userProfileCreateDto.getEmail())) {
+            throw new IllegalArgumentException("Пользователь с email " + userProfileCreateDto.getEmail() + " уже существует");
         }
-        
-        if (userProfileRepository.existsByUsername(userProfileDto.getUsername())) {
-            throw new IllegalArgumentException("Пользователь с username " + userProfileDto.getUsername() + " уже существует");
+
+        if (userProfileRepository.existsByUsername(userProfileCreateDto.getUsername())) {
+            throw new IllegalArgumentException("Пользователь с username " + userProfileCreateDto.getUsername() + " уже существует");
         }
-        
-        UserProfile userProfile = userProfileMapper.toEntity(userProfileDto);
+
+        UserProfile userProfile = userProfileMapper.toEntity(userProfileCreateDto);
         UserProfile savedProfile = userProfileRepository.save(userProfile);
         log.info("Создан новый профиль пользователя с ID: {}", savedProfile.getKeycloakId());
-        
+
         return userProfileMapper.toDto(savedProfile);
     }
 
@@ -66,36 +68,29 @@ public class UserProfileServiceImpl implements UserProfileService {
     @Transactional
     public UserProfileDto updateUserProfile(String keycloakId, UserProfileDto userProfileDto) {
         log.debug("Обновление профиля пользователя с ID: {}", keycloakId);
-        
+
         UserProfile existingProfile = userProfileRepository.findById(keycloakId)
                 .orElseThrow(() -> new ResourceNotFoundException("Профиль пользователя не найден с ID: " + keycloakId));
-        
-        // Проверяем, что email не занят другим пользователем
-        if (!existingProfile.getEmail().equals(userProfileDto.getEmail()) 
+
+        if (!existingProfile.getEmail().equals(userProfileDto.getEmail())
                 && userProfileRepository.existsByEmail(userProfileDto.getEmail())) {
             throw new IllegalArgumentException("Пользователь с email " + userProfileDto.getEmail() + " уже существует");
         }
-        
-        // Обновляем данные профиля
-        existingProfile.setUsername(userProfileDto.getUsername());
-        existingProfile.setEmail(userProfileDto.getEmail());
-        existingProfile.setRoles(userProfileDto.getRoles());
-        
-        UserProfile updatedProfile = userProfileRepository.save(existingProfile);
+        UserProfile updatedProfile = userProfileMapper.updateEntityFromDto(userProfileDto, existingProfile);
         log.info("Обновлен профиль пользователя с ID: {}", keycloakId);
-        
-        return userProfileMapper.toDto(updatedProfile);
+
+        return userProfileMapper.toDto(userProfileMapper.updateEntityFromDto(userProfileDto, updatedProfile));
     }
 
     @Override
     @Transactional
     public void deleteUserProfile(String keycloakId) {
         log.debug("Удаление профиля пользователя с ID: {}", keycloakId);
-        
+
         if (!userProfileRepository.existsById(keycloakId)) {
             throw new ResourceNotFoundException("Профиль пользователя не найден с ID: " + keycloakId);
         }
-        
+
         userProfileRepository.deleteById(keycloakId);
         log.info("Удален профиль пользователя с ID: {}", keycloakId);
     }

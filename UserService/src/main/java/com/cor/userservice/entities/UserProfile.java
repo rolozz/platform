@@ -10,7 +10,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 
 /**
@@ -67,4 +70,18 @@ public class UserProfile {
      */
     @Column(name = "role")
     Set<String> roles;
+
+    /**
+     * Дата и время создания записи (устанавливается автоматически)
+     */
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    LocalDateTime createdAt;
+
+    /**
+     * Дата и время последнего обновления записи (обновляется автоматически)
+     */
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    LocalDateTime updatedAt;
 }

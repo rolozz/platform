@@ -3,7 +3,7 @@ server:
 
 spring:
   application:
-   name: UserService
+   name: user-service
 
   config:
     import: vault://
@@ -15,7 +15,7 @@ spring:
       kv:
         enabled: true
         backend: secret
-        application-name: UserService
+        application-name: user-service
 
   threads:
     virtual:
@@ -51,4 +51,3 @@ logging:
     org.hibernate.SQL: DEBUG
     org.springframework.cloud.vault: DEBUG
     root: debug
-

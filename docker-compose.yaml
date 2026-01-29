@@ -2,7 +2,7 @@ services:
 
   profile-db:
     image: postgres:17-alpine
-    container_name: postgres_keycloak
+    container_name: postgres_profile
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
@@ -17,14 +17,14 @@ services:
     container_name: vault
     ports:
       - "8200:8200"
-    environment:
-      VAULT_DEV_ROOT_TOKEN_ID: root
-      VAULT_DEV_LISTEN_ADDRESS: 0.0.0.0:8200
+    volumes:
+      - vault_data:/vault/data
+      - ./infrastructure/vault-config/secrets:/vault/config/secrets
+      - ./infrastructure/vault-entrypoint.sh:/vault-entrypoint.sh
     cap_add:
       - IPC_LOCK
-    command: vault server -dev
+    entrypoint: [ "/bin/sh", "/vault-entrypoint.sh" ]
 
 volumes:
   postgres_profile_data:
   vault_data:
-  vault_logs:

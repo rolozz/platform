@@ -1,6 +1,9 @@
 package com.cor.userservice.service;
 
+import com.cor.userservice.dto.UserProfileCreateDto;
 import com.cor.userservice.dto.UserProfileDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -18,11 +21,11 @@ public interface UserProfileService {
     UserProfileDto getUserProfile(String keycloakId);
     
     /**
-     * Получает список всех профилей пользователей.
+     * Получает пэйдж всех профилей пользователей.
      *
      * @return список DTO профилей пользователей
      */
-    List<UserProfileDto> getAllUserProfiles();
+    Page<UserProfileDto> getAllUserProfiles(Pageable pageable);
     
     /**
      * Создает новый профиль пользователя.
@@ -30,7 +33,7 @@ public interface UserProfileService {
      * @param userProfileDto DTO с данными нового профиля
      * @return DTO созданного профиля
      */
-    UserProfileDto createUserProfile(UserProfileDto userProfileDto);
+    UserProfileDto createUserProfile(UserProfileCreateDto userProfileCreateDtoDto);
     
     /**
      * Обновляет существующий профиль пользователя.
