@@ -33,6 +33,14 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, String
     Optional<UserProfile> findByEmail(String email);
 
     /**
+     * Находит профиль пользователя по username.
+     *
+     * @param username username пользователя
+     * @return Optional с профилем пользователя, если найден
+     */
+    Optional<UserProfile> findByUsername(String username);
+
+    /**
      * Проверяет существование профиля по email.
      *
      * @param email email для проверки

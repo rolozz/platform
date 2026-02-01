@@ -44,6 +44,29 @@ springdoc:
     operations-sorter: method
     tags-sorter: alpha
 
+keycloak:
+  realm: my-realm
+  auth-server-url: http://localhost:8095
+  client-id: authservice-client
+  client-secret: m#5Fhj2$8xLp9!qB6*KvE@W7nGd4%zR1
+  admin:
+    username: admin
+    password: admin
+    client-id: admin-cli
+    realm: master
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      keycloakService:
+        slidingWindowSize: 10
+        slidingWindowType: COUNT_BASED
+        failureRateThreshold: 50
+        waitDurationInOpenState: 5s
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        registerHealthIndicator: true
+
 logging:
   level:
     liquibase: DEBUG

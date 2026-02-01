@@ -72,6 +72,18 @@ public class UserProfile {
     Set<String> roles;
 
     /**
+     * Имя пользователя.
+     */
+    @Column(name = "first_name")
+    String firstName;
+
+    /**
+     * Фамилия пользователя.
+     */
+    @Column(name = "last_name")
+    String lastName;
+
+    /**
      * Дата и время создания записи (устанавливается автоматически)
      */
     @CreationTimestamp

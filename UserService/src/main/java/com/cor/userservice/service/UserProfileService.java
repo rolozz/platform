@@ -1,11 +1,9 @@
 package com.cor.userservice.service;
 
-import com.cor.userservice.dto.UserProfileCreateDto;
+import com.cor.userservice.dto.UserProfileKeycloakDto;
 import com.cor.userservice.dto.UserProfileDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import java.util.List;
 
 /**
  * Сервис для работы с профилями пользователей.
@@ -30,10 +28,10 @@ public interface UserProfileService {
     /**
      * Создает новый профиль пользователя.
      *
-     * @param userProfileDto DTO с данными нового профиля
+     * @param userProfileCreateDtoDto DTO с данными нового профиля
      * @return DTO созданного профиля
      */
-    UserProfileDto createUserProfile(UserProfileCreateDto userProfileCreateDtoDto);
+    UserProfileDto createUserProfile(UserProfileKeycloakDto userProfileCreateDtoDto);
     
     /**
      * Обновляет существующий профиль пользователя.
@@ -42,7 +40,7 @@ public interface UserProfileService {
      * @param userProfileDto DTO с обновленными данными профиля
      * @return обновленный DTO профиля
      */
-    UserProfileDto updateUserProfile(String keycloakId, UserProfileDto userProfileDto);
+    UserProfileDto updateUserProfile(String keycloakId, UserProfileKeycloakDto userProfileDto);
     
     /**
      * Удаляет профиль пользователя.

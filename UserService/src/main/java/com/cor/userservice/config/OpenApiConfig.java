@@ -33,11 +33,6 @@ public class OpenApiConfig {
                         .description("API для управления профилями пользователей")
                         .version("1.0.0")
                         .contact(new Contact()
-                                .name("Your Name")
-                                .email("your.email@example.com")
-                                .url("https://your-website.com"))
-                        .license(new License()
-                                .name("Apache 2.0")
-                                .url("https://www.apache.org/licenses/LICENSE-2.0")));
+                                .name("SRS")));
     }
 }

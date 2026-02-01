@@ -34,10 +34,8 @@ public class UserProfileDto {
      */
     @Schema(
         description = "Уникальное имя пользователя для входа в систему",
-        example = "john_doe",
-        required = true
+        example = "john_doe"
     )
-    @NotBlank(message = "Имя пользователя не может быть пустым")
     String username;
 
     /**
@@ -45,25 +43,41 @@ public class UserProfileDto {
      */
     @Schema(
         description = "Email адрес пользователя",
-        example = "user@example.com",
-        required = true
+        example = "user@example.com"
     )
-    @NotBlank(message = "Email не может быть пустым")
-    @Email(message = "Email должен быть валидным")
     String email;
 
     /**
-     * Набор ролей пользователя в системе.
+     * Имя пользователя.
      */
     @Schema(
-        description = "Набор ролей пользователя в системе",
-        example = "[\"USER\", \"ADMIN\"]",
-        required = true
+            description = "Имя пользователя",
+            example = "Вася"
     )
-    @NotNull(message = "Роли пользователя не могут быть null")
-    Set<String> roles;
+    String firstName;
 
+    /**
+     * Фамилия пользователя.
+     */
+    @Schema(
+            description = "Фамилия пользователя",
+            example = "Васин"
+    )
+    String lastName;
+
+    /**
+     * Дата и время создания записи (устанавливается автоматически)
+     */
+    @Schema(
+            description = "время создания"
+    )
     LocalDateTime createdAt;
 
+    /**
+     * Дата и время последнего обновления записи (обновляется автоматически)
+     */
+    @Schema(
+            description = "время обновления"
+    )
     LocalDateTime updatedAt;
 }

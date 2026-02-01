@@ -1,6 +1,6 @@
 package com.cor.userservice.controller;
 
-import com.cor.userservice.dto.UserProfileCreateDto;
+import com.cor.userservice.dto.UserProfileKeycloakDto;
 import com.cor.userservice.dto.UserProfileDto;
 import com.cor.userservice.service.UserProfileService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,8 +14,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 /**
  * Контроллер для работы с профилями пользователей.
@@ -34,7 +32,7 @@ public class UserProfileController {
      * @param keycloakId идентификатор пользователя в Keycloak
      * @return DTO профиля пользователя
      */
-    @Operation(summary = "Получить профиль пользователя по ID")
+    @Operation(summary = "Получить профиль пользователя по ID", tags = {"User Profile API"})
     @GetMapping("/get")
     public ResponseEntity<UserProfileDto> getUserProfile(@RequestHeader("X-User-Id") String keycloakId) {
         return ResponseEntity.ok(userProfileService.getUserProfile(keycloakId));
@@ -45,7 +43,7 @@ public class UserProfileController {
      *
      * @return список DTO профилей пользователей
      */
-    @Operation(summary = "Получить все профили пользователей")
+    @Operation(summary = "Получить все профили пользователей", tags = {"User Profile API"})
     @GetMapping("/all")
     public ResponseEntity<Page<UserProfileDto>> getAllUserProfiles(
             @PageableDefault(
@@ -65,10 +63,10 @@ public class UserProfileController {
      * @param userProfileCreateDto DTO с данными нового профиля
      * @return DTO созданного профиля
      */
-    @Operation(summary = "Создать новый профиль пользователя")
+    @Operation(summary = "Создать новый профиль пользователя", tags = {"User Profile API"})
     @PostMapping("/create")
     public ResponseEntity<UserProfileDto> createUserProfile(
-            @Valid @RequestBody UserProfileCreateDto userProfileCreateDto) {
+            @Valid @RequestBody UserProfileKeycloakDto userProfileCreateDto) {
         return new ResponseEntity<>(
                 userProfileService.createUserProfile(userProfileCreateDto),
                 HttpStatus.CREATED
@@ -82,11 +80,11 @@ public class UserProfileController {
      * @param userProfileDto DTO с обновленными данными профиля
      * @return обновленный DTO профиля
      */
-    @Operation(summary = "Обновить профиль пользователя")
+    @Operation(summary = "Обновить профиль пользователя", tags = {"User Profile API"})
     @PutMapping("/update")
     public ResponseEntity<UserProfileDto> updateUserProfile(
             @RequestHeader("X-User-Id") String keycloakId,
-            @Valid @RequestBody UserProfileDto userProfileDto) {
+            @Valid @RequestBody UserProfileKeycloakDto userProfileDto) {
         return ResponseEntity.ok(userProfileService.updateUserProfile(keycloakId, userProfileDto));
     }
 
@@ -96,7 +94,7 @@ public class UserProfileController {
      * @param keycloakId идентификатор пользователя в Keycloak
      * @return ответ с кодом 204 (No Content)
      */
-    @Operation(summary = "Удалить профиль пользователя")
+    @Operation(summary = "Удалить профиль пользователя", tags = {"User Profile API"})
     @DeleteMapping("/delete")
     public ResponseEntity<Void> deleteUserProfile(@RequestHeader("X-User-Id") String keycloakId) {
         userProfileService.deleteUserProfile(keycloakId);
