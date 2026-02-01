@@ -249,23 +249,7 @@
         "description": "Administrator role"
       },
       {
-        "name": "SUPERVISOR",
-        "description": "Supervisor role"
-      },
-      {
-        "name": "GUEST",
-        "description": "Guest role"
-      },
-      {
-        "name": "MODERATOR",
-        "description": "Moderator role"
-      },
-      {
-        "name": "MANAGER",
-        "description": "Manager role"
-      },
-      {
-        "name": "INVESTOR",
+        "name": "OWNER",
         "description": "Investor role"
       }
     ]
