@@ -54,8 +54,11 @@ services:
       KC_HTTP_ENABLED: "true"
       KC_PROXY: edge
       KC_LOG_LEVEL: DEBUG
+      TZ: Europe/Moscow
     volumes:
       - ./infrastructure/keycloak-config/:/opt/keycloak/data/import/
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
     command:
       - start-dev
       - --import-realm

@@ -40,6 +40,72 @@ public class GlobalExceptionHandler {
     }
 
     /**
+     * Обрабатывает исключение UserAlreadyExistsException.
+     *
+     * @param ex      исключение
+     * @param request запрос
+     * @return ответ с ошибкой 409
+     */
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleUserAlreadyExistsException(
+            UserAlreadyExistsException ex, WebRequest request) {
+        
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.CONFLICT.value(),
+                HttpStatus.CONFLICT.getReasonPhrase(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    /**
+     * Обрабатывает исключение InsufficientPermissionsException.
+     *
+     * @param ex      исключение
+     * @param request запрос
+     * @return ответ с ошибкой 403
+     */
+    @ExceptionHandler(InsufficientPermissionsException.class)
+    public ResponseEntity<ErrorResponse> handleInsufficientPermissionsException(
+            InsufficientPermissionsException ex, WebRequest request) {
+        
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.FORBIDDEN.value(),
+                HttpStatus.FORBIDDEN.getReasonPhrase(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        
+        return new ResponseEntity<>(errorResponse, HttpStatus.FORBIDDEN);
+    }
+
+    /**
+     * Обрабатывает исключение KeycloakOperationException.
+     *
+     * @param ex      исключение
+     * @param request запрос
+     * @return ответ с ошибкой 500
+     */
+    @ExceptionHandler(KeycloakOperationException.class)
+    public ResponseEntity<ErrorResponse> handleKeycloakOperationException(
+            KeycloakOperationException ex, WebRequest request) {
+        
+        ErrorResponse errorResponse = new ErrorResponse(
+                LocalDateTime.now(),
+                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+                ex.getMessage(),
+                request.getDescription(false)
+        );
+        
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    /**
      * Обрабатывает исключение MethodArgumentNotValidException.
      *
      * @param ex исключение

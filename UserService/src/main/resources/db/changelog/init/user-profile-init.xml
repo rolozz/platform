@@ -3,32 +3,48 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
-    <changeSet id="1769622270846-1" author="srs">
-
+    <changeSet id="1769973697959-1" author="srs">
         <createTable tableName="user_profiles">
             <column name="keycloak_id" type="VARCHAR(255)">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_user_profiles"/>
             </column>
+
             <column name="username" type="VARCHAR(255)">
                 <constraints unique="true" nullable="false" uniqueConstraintName="uk_user_profiles_username"/>
             </column>
+
             <column name="email" type="VARCHAR(255)">
                 <constraints unique="true" nullable="false" uniqueConstraintName="uk_user_profiles_email"/>
             </column>
-            <column name="roles" type="TEXT[]">
+
+            <column name="first_name" type="VARCHAR(100)">
                 <constraints nullable="true"/>
+            </column>
+
+            <column name="last_name" type="VARCHAR(100)">
+                <constraints nullable="true"/>
+            </column>
+
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
             </column>
         </createTable>
 
-        <createIndex tableName="user_profiles" indexName="idx_user_profiles_username">
-            <column name="username"/>
-        </createIndex>
+        <addDefaultValue
+                tableName="user_profiles"
+                columnName="created_at"
+                defaultValueComputed="CURRENT_TIMESTAMP"/>
 
-        <createIndex tableName="user_profiles" indexName="idx_user_profiles_email">
-            <column name="email"/>
-        </createIndex>
+        <addDefaultValue
+                tableName="user_profiles"
+                columnName="updated_at"
+                defaultValueComputed="CURRENT_TIMESTAMP"/>
     </changeSet>
 
 </databaseChangeLog>

@@ -3,6 +3,7 @@ package com.cor.userservice.service.impl;
 import com.cor.userservice.config.KeycloakConfig;
 import com.cor.userservice.dto.UserProfileDto;
 import com.cor.userservice.dto.UserProfileKeycloakDto;
+import com.cor.userservice.util.enam.UserRole;
 import com.cor.userservice.util.exception.KeycloakOperationException;
 import com.cor.userservice.util.exception.UserAlreadyExistsException;
 import jakarta.ws.rs.core.Response;
@@ -11,6 +12,8 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.UserResource;
+import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -210,5 +213,88 @@ public class KeycloakServiceImpl {
     private String getUsernameById(UUID userId) {
         UserRepresentation user = keycloak.realm(realm).users().get(userId.toString()).toRepresentation();
         return user.getUsername();
+    }
+
+    /**
+     * Получение роли пользователя из Keycloak
+     *
+     * @param keycloakId ID пользователя в Keycloak
+     * @return роль пользователя или null если не найден
+     * @throws KeycloakOperationException если возникла ошибка при получении роли
+     */
+    public UserRole getUserRole(String keycloakId) {
+        log.debug("Получение роли пользователя {} из Keycloak", keycloakId);
+        try {
+            RealmResource realmResource = keycloak.realm(realm);
+            UsersResource usersResource = realmResource.users();
+            UserResource userResource = usersResource.get(keycloakId);
+
+            List<RoleRepresentation> roles = userResource.roles().realmLevel().listAll();
+
+            for (RoleRepresentation role : roles) {
+                UserRole userRole = UserRole.fromString(role.getName());
+                if (userRole != null) {
+                    return userRole;
+                }
+            }
+
+            return UserRole.USER;
+
+        } catch (Exception ex) {
+            log.error("Ошибка при получении роли пользователя {} из Keycloak", keycloakId, ex);
+            throw new KeycloakOperationException("Не удалось получить роль пользователя из Keycloak", ex);
+        }
+    }
+
+    /**
+     * Изменение роли пользователя в Keycloak
+     *
+     * @param keycloakId ID пользователя в Keycloak
+     * @param newRole новая роль
+     * @throws KeycloakOperationException если возникла ошибка при изменении роли
+     */
+    public void changeUserRole(String keycloakId, UserRole newRole) {
+        log.info("Изменение роли пользователя {} на {} в Keycloak", keycloakId, newRole);
+        try {
+            RealmResource realmResource = keycloak.realm(realm);
+            UsersResource usersResource = realmResource.users();
+            UserResource userResource = usersResource.get(keycloakId);
+
+            // Удаляем все текущие роли
+            List<RoleRepresentation> currentRoles = userResource.roles().realmLevel().listAll();
+            for (RoleRepresentation role : currentRoles) {
+                userResource.roles().realmLevel().remove(List.of(role));
+            }
+
+            // Назначаем новую роль
+            RoleRepresentation newRoleRep = realmResource.roles().get(newRole.getRoleName()).toRepresentation();
+            userResource.roles().realmLevel().add(List.of(newRoleRep));
+
+            log.info("Роль пользователя {} успешно изменена на {}", keycloakId, newRole);
+
+        } catch (Exception ex) {
+            log.error("Ошибка при изменении роли пользователя {} в Keycloak", keycloakId, ex);
+            throw new KeycloakOperationException("Не удалось изменить роль пользователя в Keycloak", ex);
+        }
+    }
+
+    /**
+     * Назначение конкретной роли пользователю
+     *
+     * @param userId ID пользователя
+     * @param role роль для назначения
+     * @throws KeycloakOperationException если возникла ошибка при назначении роли
+     */
+    public void assignRole(UUID userId, UserRole role) {
+        log.info("Назначение роли {} пользователю {}", role, userId);
+        try {
+            RealmResource realmResource = keycloak.realm(realm);
+            RoleRepresentation roleRepresentation = realmResource.roles().get(role.getRoleName()).toRepresentation();
+            realmResource.users().get(userId.toString()).roles().realmLevel().add(List.of(roleRepresentation));
+            log.info("Роль {} успешно назначена пользователю {}", role, userId);
+        } catch (Exception ex) {
+            log.error("Ошибка назначения роли {} пользователю {}: {}", role, userId, ex.getMessage());
+            throw new KeycloakOperationException("Ошибка назначения роли", ex);
+        }
     }
 }

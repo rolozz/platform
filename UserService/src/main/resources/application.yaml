@@ -15,7 +15,7 @@ spring:
       kv:
         enabled: true
         backend: secret
-        application-name: user-service
+        application-name: user-service-local
 
   threads:
     virtual:
@@ -30,8 +30,6 @@ spring:
     enabled: true
     change-log: classpath:/db/changelog/db.changelog-master.yaml
     drop-first: false
-
-
 
   datasource:
     driver-class-name: org.postgresql.Driver
@@ -55,17 +53,34 @@ keycloak:
     client-id: admin-cli
     realm: master
 
+Frontend: http://localhost:3000
+
 resilience4j:
   circuitbreaker:
-    instances:
-      keycloakService:
-        slidingWindowSize: 10
+    configs:
+      default:
         slidingWindowType: COUNT_BASED
+        slidingWindowSize: 20
+        minimumNumberOfCalls: 10
         failureRateThreshold: 50
-        waitDurationInOpenState: 5s
-        permittedNumberOfCallsInHalfOpenState: 3
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: 2s
+        permittedNumberOfCallsInHalfOpenState: 5
+        waitDurationInOpenState: 10s
         automaticTransitionFromOpenToHalfOpenEnabled: true
         registerHealthIndicator: true
+    instances:
+      keycloakService:
+        baseConfig: default
+
+  timelimiter:
+    configs:
+      default:
+        timeoutDuration: 3s
+        cancelRunningFuture: true
+    instances:
+      keycloakService:
+        baseConfig: default
 
 logging:
   level:

@@ -35,6 +35,8 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
+
+
     @Operation(summary = "Повысить роль пользователя", description = "Повышает роль пользователя до указанной", tags = {"Admin Management"})
     @PutMapping("/users/{username}/promote")
     public ResponseEntity<UserProfileDto> promoteUser(
@@ -79,17 +81,5 @@ public class AdminController {
         log.info("Request to get role for user {}", username);
         UserRole role = adminService.getUserRole(username);
         return ResponseEntity.ok(role);
-    }
-
-    @ExceptionHandler(SecurityException.class)
-    public ResponseEntity<String> handleSecurityException(SecurityException ex) {
-        log.warn("Security violation: {}", ex.getMessage());
-        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ex.getMessage());
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgumentException(IllegalArgumentException ex) {
-        log.warn("Invalid argument: {}", ex.getMessage());
-        return ResponseEntity.badRequest().body(ex.getMessage());
     }
 }
