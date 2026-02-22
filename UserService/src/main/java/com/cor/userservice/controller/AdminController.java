@@ -28,7 +28,7 @@ public class AdminController {
     @DeleteMapping("/users/{username}")
     public ResponseEntity<Void> deleteUserByUsername(
             @Parameter(description = "Username пользователя для удаления") @PathVariable String username,
-            @Parameter(description = "Username администратора") @RequestParam String adminUsername) {
+            @RequestHeader("X-Username") String adminUsername) {
         
         log.info("Request to delete user {} by admin {}", username, adminUsername);
         adminService.deleteUserByUsername(username, adminUsername);
@@ -42,7 +42,7 @@ public class AdminController {
     public ResponseEntity<UserProfileDto> promoteUser(
             @Parameter(description = "Username пользователя") @PathVariable String username,
             @Parameter(description = "Новая роль") @RequestParam UserRole newRole,
-            @Parameter(description = "Username администратора") @RequestParam String adminUsername) {
+            @RequestHeader("X-Username") String adminUsername) {
         
         log.info("Request to promote user {} to {} by admin {}", username, newRole, adminUsername);
         UserProfileDto result = adminService.promoteUser(username, newRole, adminUsername);
@@ -54,7 +54,7 @@ public class AdminController {
     public ResponseEntity<UserProfileDto> demoteUser(
             @Parameter(description = "Username пользователя") @PathVariable String username,
             @Parameter(description = "Новая роль") @RequestParam UserRole newRole,
-            @Parameter(description = "Username администратора") @RequestParam String adminUsername) {
+            @RequestHeader("X-Username") String adminUsername) {
         
         log.info("Request to demote user {} to {} by admin {}", username, newRole, adminUsername);
         UserProfileDto result = adminService.demoteUser(username, newRole, adminUsername);
@@ -66,7 +66,7 @@ public class AdminController {
     public ResponseEntity<UserProfileDto> changeUserRole(
             @Parameter(description = "Username пользователя") @PathVariable String username,
             @Parameter(description = "Новая роль") @RequestParam UserRole newRole,
-            @Parameter(description = "Username администратора") @RequestParam String adminUsername) {
+            @RequestHeader("X-Username") String adminUsername) {
         
         log.info("Request to change role of user {} to {} by admin {}", username, newRole, adminUsername);
         UserProfileDto result = adminService.changeUserRole(username, newRole, adminUsername);

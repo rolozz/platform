@@ -1,0 +1,226 @@
+.layout {
+  min-height: 100%;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 16px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+}
+
+.brand {
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+.meta {
+  font-size: 12px;
+  opacity: 0.9;
+  text-align: right;
+}
+
+.metaRow {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+}
+
+.metaKey {
+  opacity: 0.7;
+}
+
+.metaVal {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+.grid {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.panel {
+  padding: 14px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.panel.wide {
+  grid-column: 1 / -1;
+}
+
+.panel h2 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+details {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  margin-top: 10px;
+}
+
+summary {
+  cursor: pointer;
+  user-select: none;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.form {
+  margin-top: 10px;
+  display: grid;
+  gap: 10px;
+}
+
+.twoCols {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.label {
+  font-size: 12px;
+  opacity: 0.75;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.25);
+  color: rgba(255, 255, 255, 0.92);
+  outline: none;
+}
+
+input::placeholder {
+  opacity: 0.6;
+}
+
+input:focus,
+select:focus {
+  border-color: rgba(113, 88, 255, 0.7);
+  box-shadow: 0 0 0 3px rgba(113, 88, 255, 0.18);
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+}
+
+.btn:hover {
+  border-color: rgba(0, 240, 255, 0.35);
+}
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn.danger {
+  border-color: rgba(255, 83, 83, 0.35);
+}
+
+.kv {
+  margin-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 12px;
+  display: grid;
+  gap: 8px;
+}
+
+.kvRow {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 10px;
+}
+
+.kvKey {
+  font-size: 12px;
+  opacity: 0.7;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+.kvVal {
+  font-size: 12px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.muted {
+  opacity: 0.65;
+}
+
+.result {
+  margin-top: 10px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 12px;
+}
+
+.result.ok {
+  border-color: rgba(0, 240, 255, 0.25);
+}
+
+.result.err {
+  border-color: rgba(255, 83, 83, 0.25);
+}
+
+.resultTitle {
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 8px;
+  opacity: 0.9;
+}
+
+.resultBody {
+  margin: 0;
+  padding: 10px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  overflow: auto;
+  max-height: 340px;
+  font-size: 12px;
+}
+
+@media (max-width: 1080px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
